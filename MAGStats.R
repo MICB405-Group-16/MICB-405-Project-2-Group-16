@@ -25,19 +25,19 @@ clean_mag_rpkm <- mag_rpkm %>%
 
 #GTDBTK file processing
 
-clean_bac_gtdbtk <- bac_gtdbtk %>%
-  separate('X1', c("Location", "Depth.MAG"), sep="_") %>%
-  separate('Depth.MAG', c("Depth", "MAG"), sep="\\.") %>%
-  separate('X2', c("Kingdom", "Phylum", "Clade"), sep=";") %>%
-  mutate(MAG = as.numeric(MAG)) %>%
-  select(MAG, Kingdom, Phylum, Clade)
+process_gtdbtk_file <- function(dataframe){
+  processed_data <- dataframe %>%
+    separate('X1', c("Location", "Depth.MAG"), sep="_") %>%
+    separate('Depth.MAG', c("Depth", "MAG"), sep="\\.") %>%
+    separate('X2', c("Kingdom", "Phylum", "Clade"), sep=";") %>%
+    mutate(MAG = as.numeric(MAG)) %>%
+    select(MAG, Kingdom, Phylum, Clade)
+  return(processed_data)
+}
 
-clean_ar_gtdbtk <- ar_gtdbtk %>%
-  separate('X1', c("Location", "Depth.MAG"), sep="_") %>%
-  separate('Depth.MAG', c("Depth", "MAG"), sep="\\.") %>%
-  separate('X2', c("Kingdom", "Phylum", "Clade"), sep=";") %>%
-  mutate(MAG = as.numeric(MAG)) %>%
-  select(MAG, Kingdom, Phylum, Clade)
+clean_bac_gtdbtk <- process_gtdbtk_file(bac_gtdbtk)
+
+clean_ar_gtdbtk <- process_gtdbtk_file(ar_gtdbtk)
 
 all_gtdbtk <- rbind(clean_bac_gtdbtk, clean_ar_gtdbtk) %>%
   arrange(MAG)
