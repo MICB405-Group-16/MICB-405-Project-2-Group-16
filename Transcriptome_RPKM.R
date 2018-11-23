@@ -8,6 +8,7 @@ si074_rpkm <- read_csv('4_RPKM_Output/SI074_150m_RPKM.csv', col_names=FALSE)
 si075_rpkm <- read_csv('4_RPKM_Output/SI075_150m_RPKM.csv', col_names=FALSE)
 prokka_tsv <- read_tsv('2_Concatenated_Prokka_Output/all_tsvs.tsv', col_names=TRUE)
 prokka_mag_ref <- read_csv('2_Concatenated_Prokka_Output/mag_prokka_ref.csv', col_names=TRUE)
+kegg <- read_tsv('5_KEGG_Output/query.ko', col_names=c("ID", "KO"))
 
 clean_rpkm_data <- function(dataframe, cruise_name){
   clean_data <- dataframe %>%
@@ -19,13 +20,23 @@ clean_rpkm_data <- function(dataframe, cruise_name){
   return(clean_data)
 }
 
+clean_kegg <- kegg %>%
+  separate("ID", c("MAG_ID", "ORF_ID"), sep="_")
+
 full_table <- bind_rows(clean_rpkm_data(si042_rpkm, "SI042"),
           clean_rpkm_data(si048_rpkm, "SI048"),
           clean_rpkm_data(si072_rpkm, "SI072"),
           clean_rpkm_data(si074_rpkm, "SI074"),
-          clean_rpkm_data(si075_rpkm, "SI075"))
+          clean_rpkm_data(si075_rpkm, "SI075")) %>%
+  select(MAG_ID, ORF_ID, RPKM, Cruise, ftype, length_bp, gene, product, MAG_NUM) %>%
+  filter(RPKM > 0)
+
+#TODO: is this what we want? this inner join throws out about half the rows, because kegg has no idea what the ORF is
+full_table_kegg <- full_table %>%
+  inner_join(clean_kegg, c("MAG_ID" = "MAG_ID", "ORF_ID" = "ORF_ID"))
 
 full_table %>%
-  select(MAG_ID, ORF_ID, RPKM, Cruise, ftype, length_bp, gene, product, MAG_NUM) %>%
-  filter(RPKM > 0) %>%
+  View()
+
+full_table_kegg %>%
   View()
