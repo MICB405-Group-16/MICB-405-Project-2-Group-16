@@ -29,7 +29,7 @@ process_gtdbtk_file <- function(dataframe){
   processed_data <- dataframe %>%
     separate('X1', c("Location", "Depth.MAG"), sep="_") %>%
     separate('Depth.MAG', c("Depth", "MAG"), sep="\\.") %>%
-    separate('X2', c("Kingdom", "Phylum", "Clade"), sep=";") %>%
+    separate('X2', c("Kingdom", "Phylum", "Class"), sep=";") %>%
     mutate(MAG = as.numeric(MAG)) %>%
     select(MAG, Kingdom, Phylum, Clade)
   return(processed_data)
