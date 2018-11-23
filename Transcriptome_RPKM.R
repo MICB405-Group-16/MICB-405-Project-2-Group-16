@@ -1,3 +1,6 @@
+library(tidyverse)
+library(ggplot2)
+
 si042_rpkm <- read_csv('4_RPKM_Output/SI042_150m_RPKM.csv', col_names=FALSE)
 si048_rpkm <- read_csv('4_RPKM_Output/SI048_150m_RPKM.csv', col_names=FALSE)
 si072_rpkm <- read_csv('4_RPKM_Output/SI072_150m_RPKM.csv', col_names=FALSE)
