@@ -13,10 +13,16 @@ proj_dat <- raw_dat %>%
   select(Date, SI, O2_uM, PO4_uM, NO3_uM, H2S_uM, Mean_NH4, Mean_NO2, Mean_N2, Mean_O2, Mean_co2, Mean_N2O, Mean_CH4, Temperature, Salinity, Density)
 
 chemicals_of_interest <- proj_dat %>%
-  select(Date, O2_uM, NO3_uM, H2S_uM) %>%
-  gather(key="Chemical", value="Concentration_uM", -Date, na.rm=TRUE)
+  select(Date, O2_uM, NO3_uM, H2S_uM)
 
 #Graph [molecules] vs date
 chemicals_of_interest %>% 
+  gather(key="Chemical", value="Concentration_uM", -Date, na.rm=TRUE) %>%
   ggplot() + 
   geom_point(aes(x=Date, y=Concentration_uM, color=Chemical, shape=Chemical))
+
+chemicals_of_interest %>%
+  arrange(H2S_uM) %>%  
+  filter(!is.na(H2S_uM)) %>%
+  ggplot() + 
+  geom_point(aes(x=O2_uM, y=NO3_uM, color=H2S_uM))
