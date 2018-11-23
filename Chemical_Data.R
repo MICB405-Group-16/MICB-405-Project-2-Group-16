@@ -14,20 +14,9 @@ proj_dat <- raw_dat %>%
 
 chemicals_of_interest <- proj_dat %>%
   select(Date, O2_uM, NO3_uM, H2S_uM) %>%
-  View()
+  gather(key="Chemical", value="Concentration_uM", -Date, na.rm=TRUE)
 
 #Graph [molecules] vs date
-proj_dat %>% 
+chemicals_of_interest %>% 
   ggplot() + 
-  geom_point(aes(x=Date, y= O2_uM)) +
-  scale_y_continuous(limits=c(0, 40)) 
-
-proj_dat %>% 
-  ggplot() + 
-  geom_point(aes(x=Date, y= NO3_uM)) +
-  scale_y_continuous(limits=c(0, 40)) 
-
-proj_dat %>% 
-  ggplot() + 
-  geom_point(aes(x=Date, y= H2S_uM)) +
-  scale_y_continuous(limits=c(0, 40)) 
+  geom_point(aes(x=Date, y=Concentration_uM, color=Chemical, shape=Chemical))
