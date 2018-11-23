@@ -15,14 +15,17 @@ proj_dat <- raw_dat %>%
 View(proj_dat)
 
 #Graph [molecules] vs date
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= O2_uM))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= NO3_uM))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= H2S_uM))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= PO4_uM))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_NH4))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_NO2))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_N2))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_O2))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_co2))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_N2O))
-proj_dat %>% ggplot() + geom_point(aes(x=Date, y= Mean_CH4))
+proj_dat %>% 
+  ggplot() + 
+  geom_point(aes(x=Date, y= O2_uM)) +
+  scale_y_continuous(limits=c(0, 40)) 
+
+proj_dat %>% 
+  ggplot() + 
+  geom_point(aes(x=Date, y= NO3_uM)) +
+  scale_y_continuous(limits=c(0, 40)) 
+
+proj_dat %>% 
+  ggplot() + 
+  geom_point(aes(x=Date, y= H2S_uM)) +
+  scale_y_continuous(limits=c(0, 40)) 
