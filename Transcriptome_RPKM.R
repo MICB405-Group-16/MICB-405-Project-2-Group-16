@@ -19,20 +19,13 @@ clean_rpkm_data <- function(dataframe, cruise_name){
   return(clean_data)
 }
 
-prokka_tsv %>%
-  View()
+full_table <- bind_rows(clean_rpkm_data(si042_rpkm, "SI042"),
+          clean_rpkm_data(si048_rpkm, "SI048"),
+          clean_rpkm_data(si072_rpkm, "SI072"),
+          clean_rpkm_data(si074_rpkm, "SI074"),
+          clean_rpkm_data(si075_rpkm, "SI075"))
 
-clean_rpkm_data(si042_rpkm, "SI042") %>%
-  View()
-
-clean_rpkm_data(si048_rpkm, "SI048") %>%
-  View()
-
-clean_rpkm_data(si072_rpkm, "SI072") %>%
-  View()
-
-clean_rpkm_data(si074_rpkm, "SI074") %>%
-  View()
-
-clean_rpkm_data(si075_rpkm, "SI075") %>%
+full_table %>%
+  select(MAG_ID, ORF_ID, RPKM, Cruise, ftype, length_bp, gene, product, MAG_NUM) %>%
+  filter(RPKM > 0) %>%
   View()
