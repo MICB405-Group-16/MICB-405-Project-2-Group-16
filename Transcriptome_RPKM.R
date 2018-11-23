@@ -6,13 +6,21 @@ si048_rpkm <- read_csv('4_RPKM_Output/SI048_150m_RPKM.csv', col_names=FALSE)
 si072_rpkm <- read_csv('4_RPKM_Output/SI072_150m_RPKM.csv', col_names=FALSE)
 si074_rpkm <- read_csv('4_RPKM_Output/SI074_150m_RPKM.csv', col_names=FALSE)
 si075_rpkm <- read_csv('4_RPKM_Output/SI075_150m_RPKM.csv', col_names=FALSE)
+prokka_tsv <- read_tsv('2_Concatenated_Prokka_Output/all_tsvs.tsv', col_names=TRUE)
+prokka_mag_ref <- read_csv('2_Concatenated_Prokka_Output/mag_prokka_ref.csv', col_names=TRUE)
 
 clean_rpkm_data <- function(dataframe, cruise_name){
   clean_data <- dataframe %>%
     mutate(Cruise = cruise_name) %>%
-    rename(ID=X1, RPKM=X2)
+    rename(ID=X1, RPKM=X2) %>%
+    inner_join(prokka_tsv, c("ID" = "locus_tag")) %>%
+    separate("ID", c("MAG_ID", "ORF_ID"), sep="_") %>%
+    inner_join(prokka_mag_ref, c("MAG_ID"))
   return(clean_data)
 }
+
+prokka_tsv %>%
+  View()
 
 clean_rpkm_data(si042_rpkm, "SI042") %>%
   View()
