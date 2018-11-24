@@ -60,7 +60,8 @@ ultimate_table <- full_table %>%
 ultimate_table %>% View()
 
 rpkm_by_cruise_and_ko <- ultimate_table %>%
-  group_by(KO, MAG_NUM) %>%
+  filter(Phylum == "p__Proteobacteria") %>%
+  group_by(MAG_NUM, KO) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
   spread(key = MAG_NUM, value = total_RPKM)
 
