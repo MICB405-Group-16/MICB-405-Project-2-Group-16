@@ -37,7 +37,9 @@ clean_ar_gtdbtk <- process_gtdbtk_file(ar_gtdbtk)
 
 #Final Files
 clean_kegg <- kegg %>%
-  separate("ID", c("MAG_ID", "ORF_ID"), sep="_")
+  separate("ID", c("MAG_ID", "ORF_ID"), sep="_") %>%
+  filter(!is.na(KO))
+
 
 all_gtdbtk <- rbind(clean_bac_gtdbtk, clean_ar_gtdbtk) %>%
   arrange(MAG)
@@ -60,8 +62,7 @@ ultimate_table %>% View()
 rpkm_by_cruise_and_ko <- ultimate_table %>%
   group_by(KO, MAG_NUM) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
-  spread(key = MAG_NUM, value = total_RPKM) %>%
-  filter(!is.na(KO))
+  spread(key = MAG_NUM, value = total_RPKM)
 
 pv_mat <- dplyr::select(rpkm_by_cruise_and_ko, -KO)
 rownames(pv_mat) <- rpkm_by_cruise_and_ko$KO
