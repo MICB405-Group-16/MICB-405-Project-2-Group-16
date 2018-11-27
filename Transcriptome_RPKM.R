@@ -59,7 +59,7 @@ ultimate_table <- full_table %>%
 ultimate_table %>% View()
 
 rpkm_by_cruise_and_ko <- ultimate_table %>%
-  filter(Cruise == "SI042", Kingdom == "d__Archaea") %>%
+  filter(Cruise == "SI075", Kingdom == "d__Archaea") %>%
   group_by(MAG_NUM, KO) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
   spread(key = MAG_NUM, value = total_RPKM)
