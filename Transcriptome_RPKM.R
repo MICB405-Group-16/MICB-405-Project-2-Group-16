@@ -59,7 +59,7 @@ ultimate_table <- full_table %>%
 ultimate_table %>% View()
 
 rpkm_by_cruise_and_ko <- ultimate_table %>%
-  filter(Cruise == "SI075", Kingdom == "d__Archaea") %>%
+  filter(Class == "c__Microgenomatia") %>%
   group_by(MAG_NUM, KO) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
   spread(key = MAG_NUM, value = total_RPKM)
@@ -80,3 +80,4 @@ pv.out <- pathview(gene.data = pv_mat,
                    species = "ko",
                    pathway.id="00910",
                    kegg.dir = "6_Pathview/")
+  

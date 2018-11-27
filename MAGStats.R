@@ -37,8 +37,9 @@ process_gtdbtk_file <- function(dataframe){
     separate('X2', c("Kingdom", "Phylum", "Class"), sep=";") %>%
     separate('Phylum', c("prefix_p", "Phylum"), sep="__") %>%
     separate('Kingdom', c("prefix_k", "Kingdom"), sep="__") %>%
+    separate('Class', c("prefix_c", "Class"), sep="__") %>%
     mutate(MAG = as.numeric(MAG)) %>%
-    dplyr::select(MAG, Kingdom, Phylum)
+    dplyr::select(MAG, Kingdom, Phylum, Class)
   return(processed_data)
 }
 
@@ -51,7 +52,8 @@ all_gtdbtk <- rbind(clean_bac_gtdbtk, clean_ar_gtdbtk) %>%
 
 #Join everything together
 rpkm_gtdbtk <- left_join(clean_mag_rpkm, all_gtdbtk, c("MAG"))
-full_table <- left_join(clean_checkm, rpkm_gtdbtk, c("MAG"))
+full_table <- left_join(clean_checkm, rpkm_gtdbtk, c("MAG")) %>%
+  arrange(Kingdom, Phylum, Class)
 
 full_table %>%
   ggplot() +
