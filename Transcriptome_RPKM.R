@@ -58,20 +58,21 @@ ultimate_table <- full_table %>%
 
 ultimate_table %>% View()
 
-rpkm_by_cruise_and_ko <- ultimate_table %>%
+#Aggregated binary pathview (yes/no for gene expression)
+rpkm_by_taxonomy_and_ko <- ultimate_table %>%
   filter(Phylum == "p__Micrarchaeota") %>%
   group_by(MAG_NUM, KO) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
   spread(key = MAG_NUM, value = total_RPKM)
 
-pv_mat <- dplyr::select(rpkm_by_cruise_and_ko, -KO)
+pv_mat <- dplyr::select(rpkm_by_taxonomy_and_ko, -KO)
 pv_mat <- pv_mat %>% 
   rowwise() %>% 
   do( (.) %>% 
         as.data.frame %>% 
         mutate(sum = sum(., na.rm = TRUE)) ) %>% 
   dplyr::select(sum)
-rownames(pv_mat) <- rpkm_by_cruise_and_ko$KO
+rownames(pv_mat) <- rpkm_by_taxonomy_and_ko$KO
 
 #sulfur = 00920
 #nitrogen = 00910
@@ -79,5 +80,22 @@ rownames(pv_mat) <- rpkm_by_cruise_and_ko$KO
 pv.out <- pathview(gene.data = pv_mat,
                    species = "ko",
                    pathway.id="00920",
+                   kegg.dir = "6_Pathview/")
+
+#Pathview for every phylum individually
+rpkm_by_taxonomy_and_ko <- ultimate_table %>%
+  group_by(Class, KO) %>%
+  summarize(total_RPKM = sum(RPKM)) %>%
+  spread(key = Class, value = total_RPKM) 
+
+pv_mat <- dplyr::select(rpkm_by_taxonomy_and_ko, -KO)
+rownames(pv_mat) <- rpkm_by_taxonomy_and_ko$KO
+
+#sulfur = 00920
+#nitrogen = 00910
+#carbon = 01200
+pv.out <- pathview(gene.data = pv_mat,
+                   species = "ko",
+                   pathway.id="00910",
                    kegg.dir = "6_Pathview/")
   
