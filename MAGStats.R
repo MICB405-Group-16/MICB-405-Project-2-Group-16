@@ -64,3 +64,21 @@ full_table %>%
   theme(legend.key.size = unit(0, 'lines'))
 
 View(full_table)
+
+quality_filtered <- full_table %>% 
+  filter(Quality == "Medium" | Quality == "High")
+
+#Is this worthwhile? Should i mutate and get average total RPKM by MAG #?
+aggregate_by_phylum <- quality_filtered %>%
+  group_by(Phylum) %>%
+  summarize(MAG_Count = n(), Total_Mean_RPKM = sum(Mean_RPKM_By_Cruise))
+
+aggregate_by_phylum %>%
+  ggplot() + 
+  geom_point(aes(x=Phylum, y=MAG_Count, size=Total_Mean_RPKM)) +
+  theme(panel.background = element_blank(),
+        panel.grid.major = element_line(colour = "#bdbdbd", linetype = "dotted"),
+        panel.grid.minor = element_blank(),
+        axis.title.y = element_text(angle = 0),
+        axis.text.x = element_text(angle = 45,
+                                   hjust = 1))
