@@ -52,7 +52,6 @@ full_table <- bind_rows(clean_rpkm_data(si042_rpkm, "SI042"),
   dplyr::select(MAG_ID, ORF_ID, RPKM, Cruise, ftype, length_bp, gene, product, MAG_NUM) %>%
   filter(RPKM > 0)
 
-#TODO: is this what we want? this inner join throws out about half the rows, because kegg has no idea what the ORF is
 ultimate_table <- full_table %>%
   inner_join(all_gtdbtk, c("MAG_NUM" = "MAG")) %>%
   inner_join(clean_kegg, c("MAG_ID" = "MAG_ID", "ORF_ID" = "ORF_ID"))
@@ -60,12 +59,18 @@ ultimate_table <- full_table %>%
 ultimate_table %>% View()
 
 rpkm_by_cruise_and_ko <- ultimate_table %>%
-  filter(Phylum == "p__Proteobacteria") %>%
+  filter(Cruise == "SI042", Kingdom == "d__Archaea") %>%
   group_by(MAG_NUM, KO) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
   spread(key = MAG_NUM, value = total_RPKM)
 
 pv_mat <- dplyr::select(rpkm_by_cruise_and_ko, -KO)
+pv_mat <- pv_mat %>% 
+  rowwise() %>% 
+  do( (.) %>% 
+        as.data.frame %>% 
+        mutate(sum = sum(., na.rm = TRUE)) ) %>% 
+  dplyr::select(sum)
 rownames(pv_mat) <- rpkm_by_cruise_and_ko$KO
 
 #sulfur = 00920
@@ -73,5 +78,5 @@ rownames(pv_mat) <- rpkm_by_cruise_and_ko$KO
 #carbon = 01200
 pv.out <- pathview(gene.data = pv_mat,
                    species = "ko",
-                   pathway.id="00920",
+                   pathway.id="00910",
                    kegg.dir = "6_Pathview/")
