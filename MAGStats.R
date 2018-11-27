@@ -10,7 +10,7 @@ clean_checkm <- checkm %>%
   separate('Bin Id', c("Location", "Depth.MAG"), sep="_") %>%
   separate('Depth.MAG', c("Depth", "MAG"), sep="\\.") %>%
   mutate(MAG = as.numeric(MAG)) %>%
-  select('MAG', 'Marker lineage', 'Completeness', 'Contamination') %>%
+  dplyr::select('MAG', 'Marker lineage', 'Completeness', 'Contamination') %>%
   mutate(Quality = case_when(Completeness>90 & Contamination < 5 ~ "High",
                               Completeness>50 & Contamination < 10 ~ "Medium",
                              TRUE ~ "Low")) %>%
@@ -20,9 +20,12 @@ clean_checkm <- checkm %>%
 
 clean_mag_rpkm <- mag_rpkm %>%
   separate('Sequence', c("Location", "Depth", "MAG", "Contig"), sep="_") %>%
+  separate('Sample', c("Cruise", "Depth_Sample"), sep="_") %>%
   mutate(MAG = as.numeric(MAG)) %>%
+  group_by(Cruise, MAG) %>%
+  summarize(Total_RPKM_By_Cruise = sum(RPKM)) %>%
   group_by(MAG) %>%
-  summarize(Total_RPKM = sum(RPKM)) %>%
+  summarize(Mean_RPKM_By_Cruise = mean(Total_RPKM_By_Cruise)) %>%
   arrange(MAG)
 
 #GTDBTK file processing
@@ -35,7 +38,7 @@ process_gtdbtk_file <- function(dataframe){
     separate('Phylum', c("prefix_p", "Phylum"), sep="__") %>%
     separate('Kingdom', c("prefix_k", "Kingdom"), sep="__") %>%
     mutate(MAG = as.numeric(MAG)) %>%
-    select(MAG, Kingdom, Phylum)
+    dplyr::select(MAG, Kingdom, Phylum)
   return(processed_data)
 }
 
@@ -52,10 +55,10 @@ full_table <- left_join(clean_checkm, rpkm_gtdbtk, c("MAG"))
 
 full_table %>%
   ggplot() +
-  geom_point(aes(x=Completeness, y=Contamination, color=Phylum, size=Total_RPKM, shape=Quality)) +
+  geom_point(aes(x=Completeness, y=Contamination, color=Phylum, size=Mean_RPKM_By_Cruise, shape=Quality)) +
   scale_x_continuous(limits=c(0, 100)) +
   scale_y_continuous(limits=c(0, 30)) + 
-  scale_size(range=c(1, 8))+
+  scale_size(range=c(1, 6))+
   theme(legend.key.size = unit(0, 'lines'))
 
 View(full_table)
