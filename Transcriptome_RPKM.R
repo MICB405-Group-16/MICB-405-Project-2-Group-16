@@ -60,7 +60,7 @@ ultimate_table %>% View()
 
 #Aggregated binary pathview (yes/no for gene expression)
 rpkm_by_taxonomy_and_ko <- ultimate_table %>%
-  filter(Phylum == "p__Micrarchaeota") %>%
+  filter(Class == "c__Gammaproteobacteria") %>%
   group_by(MAG_NUM, KO) %>%
   summarize(total_RPKM = sum(RPKM)) %>%
   spread(key = MAG_NUM, value = total_RPKM)

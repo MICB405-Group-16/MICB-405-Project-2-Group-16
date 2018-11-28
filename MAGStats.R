@@ -68,17 +68,27 @@ View(full_table)
 quality_filtered <- full_table %>% 
   filter(Quality == "Medium" | Quality == "High")
 
-#Is this worthwhile? Should i mutate and get average total RPKM by MAG #?
-aggregate_by_phylum <- quality_filtered %>%
-  group_by(Phylum) %>%
+#Phylum wide MAG count and RPKM total
+aggregate_by_class <- quality_filtered %>%
+  group_by(Class) %>%
   summarize(MAG_Count = n(), Total_Mean_RPKM = sum(Mean_RPKM_By_Cruise))
 
-aggregate_by_phylum %>%
+aggregate_by_class %>%
   ggplot() + 
-  geom_point(aes(x=Phylum, y=MAG_Count, size=Total_Mean_RPKM)) +
+  geom_point(aes(x=Class, y=MAG_Count, size=Total_Mean_RPKM)) +
   theme(panel.background = element_blank(),
         panel.grid.major = element_line(colour = "#bdbdbd", linetype = "dotted"),
         panel.grid.minor = element_blank(),
         axis.title.y = element_text(angle = 0),
         axis.text.x = element_text(angle = 45,
                                    hjust = 1))
+
+#Average Completeness/Contamination by Class
+#TODO: please make this a bar graph, the dot plot sucks
+avg_mag_stats_by_class <- quality_filtered %>%
+  group_by(Class) %>%
+  summarize(Completeness=mean(Completeness), Contamination=mean(Contamination)) 
+
+avg_mag_stats_by_class %>%
+  ggplot() +
+  geom_point(aes(x=Completeness, y=Contamination, color=Class))
