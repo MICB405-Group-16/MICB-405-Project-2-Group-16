@@ -84,11 +84,16 @@ aggregate_by_class %>%
                                    hjust = 1))
 
 #Average Completeness/Contamination by Class
-#TODO: please make this a bar graph, the dot plot sucks
 avg_mag_stats_by_class <- quality_filtered %>%
   group_by(Class) %>%
-  summarize(Completeness=mean(Completeness), Contamination=mean(Contamination)) 
+  summarize(Completeness=mean(Completeness), Contamination=mean(Contamination)) %>%
+  gather(key="Metric", value="Percentage", -Class) 
 
 avg_mag_stats_by_class %>%
-  ggplot() +
-  geom_point(aes(x=Completeness, y=Contamination, color=Class))
+  ggplot(aes(Class, Percentage)) +
+  geom_bar(aes(fill=Metric), position = position_dodge(width=0.5), stat="identity") +
+  theme(panel.background = element_blank(),
+        panel.grid.major = element_line(colour = "#bdbdbd", linetype = "dotted"),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_text(angle = 60,
+                                   hjust = 1))
