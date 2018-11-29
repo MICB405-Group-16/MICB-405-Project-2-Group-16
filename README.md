@@ -21,6 +21,23 @@ ie. Open your script with vim, type :set fileformat=unix, hit Enter, then save w
 ## 7_Initial_Data
 
 ## Viz
+Contains all figures generated from R.
+
+### Chemical
+Plots Saanich Inlet Time Series Chemical Data.
+
+3_Chemical_Comparison.png compares sulfide, nitrate, and oxygen against each other.
+All_Chemicals_vs_Date.png compares sulfide, nitrate, and oxygen against time.
+Nitrogenous_Compounds_By_Date.png compares various producuts of the nitrogen cycle against time.
+
+### MAG
+Each figure visualizes metadata from our MAGs. Avg_Mag_Stats_By_Class.png shows contamination and completeness for all the high quality and medium quality MAGs aggregated by taxonomic class. MAG_Stats.png plots contamination and completeness for all MAGs and scales their dot size by RPKM. MAG_Count_And_RPKM_By_Class.png shows how many MAGs make up each taxonomic class and their total RPKM.
+
+### Pathview
+Each figure is output from Pathview for a given data context. For example, Aggregated shows existence of nitrogen and sulfur metabolism enzymes for all taxa combined. Aggregated_Kingdom does the same thing but splits Bacteria and Archaea. Aggregated_Class further splits every taxa into classes.
+
+### Pathway_Dot_Plot
+Each figure shows all the taxonomic microbial classes and steps in a given pathway. If there is a dot at an intercept between a pathway step and a class, then that class expresses an enzyme that catalyzes the step.
 
 ## data
 Contains a local copy of the Saanich Time Series Chemical (1)
