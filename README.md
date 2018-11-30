@@ -7,18 +7,25 @@ ie. Open your script with vim, type :set fileformat=unix, hit Enter, then save w
 
 # Folder Rundown
 ## 0_Initial_Data
+Raw data from the metagenome assembly and binning steps.
 
-## 2_Initial_Data
+## 2_Concatenated_Prokka_Output
+Contains the concatenated metadata files output by Prokka such as the TSV of all the predicted ORF metadata, and a table that maps Prokka IDs (eg. ABCDEFGH) to MAG numbers (eg. 10, 103).
 
-## 3_Initial_Data
+## 3_Transcriptome_Output
+Contains FastQC output for our transcriptome reads. Not actually used.
 
-## 4_Initial_Data
+## 4_RPKM_Output
+RPKM files for each set of transcriptome reads aligned to Prokka predicted ORFs.
 
-## 5_Initial_Data
+## 5_KEGG_Output
+Contains the KO TSV file that KAAS output on our ORFs.
 
-## 6_Initial_Data
+## 6_Pathview
+Pathway for pathview. Doesn't actually contain anything worth looking at.
 
-## 7_Initial_Data
+## 7_Pathways
+Contains the data tables for the binary matrices that visualize contribution of each class in nitrogen cycle (and sulfate reduction) pathways.
 
 ## Viz
 Contains all figures generated from R.
@@ -55,6 +62,20 @@ Contains all the shell scripts we used during our pipeline:
 9) Makes a table that maps all the Prokka MAG ID's (eg. ABCDEFGH) to their respective MAG numbers (eg. 10) for joining tables in R.
 
 # R Script Rundown
+## Chemical_Data.R
+Visualizes the Saanich Chemical Time Series Data
+
+## MAGStats.R
+Visualizes MAG quality (eg. Contamination vs Completeness)
+
+## MAG_ORF_Stats.R
+Calculates some statistics on Prokka output - 16S rRNA count and range of ORF numbers for each MAG.
+
+## Pathways.R
+Processes the files in https://github.com/MICB405-Group-16/MICB-405-Project-2-Group-16/tree/master/7_Pathways to generate the dot plots for each nitrogen pathway.
+
+## Transcriptome_RPKM.R
+Processes transcriptome data for Pathview
 
 # References
 1. Torres-Beltran, M. Dryad Digital Repository http://dx.doi.org/10.5061/dryad.nh035 (2017)
