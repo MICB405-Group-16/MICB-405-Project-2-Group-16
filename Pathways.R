@@ -11,11 +11,11 @@ plot_pathway <- function(csv){
   csv$Class <- factor(csv$Class, levels = csv$Class)
   return(csv %>%
            gather(key = "Step", value = "Expressed", -Class) %>%
+           rename("Microbe Class"=Class, "Enzyme performing step in pathway"=Step) %>%
            ggplot() +
-           geom_point(aes(x=Step, y=Class, size=Expressed, color=Class), show.legend = FALSE) +
+           geom_point(aes(x=`Enzyme performing step in pathway`, y=`Microbe Class`, size=Expressed, color=`Microbe Class`), show.legend = FALSE) +
            scale_size(range=c(-1, 5)) +
-           theme(panel.background = element_blank(),
-                 panel.grid.major = element_line(colour = "#bdbdbd", linetype = "solid"),
+           theme(panel.grid.major = element_line(colour = "#bdbdbd", linetype = "solid"),
                  panel.grid.minor = element_blank()) + 
            coord_fixed(ratio = 0.15))
 }
